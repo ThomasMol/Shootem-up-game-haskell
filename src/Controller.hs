@@ -14,6 +14,7 @@ input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState
-inputKey (EventKey (SpecialKey c) _ _ _) gstate = gstate 
+inputKey (EventKey (SpecialKey c) Down _ _) (GameState player score ) | c == KeyUp = GameState player {positionY = positionY player + 10} score
+                                                                      | c == KeyDown = GameState player {positionY = positionY player - 10} score
 
 inputKey _ gstate = gstate -- Otherwise keep the same
