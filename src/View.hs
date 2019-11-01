@@ -10,10 +10,19 @@ view = return . viewPure
 viewPure :: GameState -> Picture
 viewPure (GameState player enemies bullets score) = pictures help
                                                 where 
-                                                    help = [scale 0.4 0.4 (translate (-300) 10 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))] ++ test
-                                                    test = drawEnemies (GameState player enemies bullets score)
-drawEnemies :: GameState -> [Picture]
-drawEnemies gstate = map (drawEnemy 1) (enemies gstate)
+                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing
+                                                    enemydrawing = drawEnemies (GameState player enemies bullets score)
+                                                    bulletdrawing = drawBullets (GameState player enemies bullets score)
 
-drawEnemy :: Int -> Enemy -> Picture
-drawEnemy  _ enemy = translate(enemyPosX enemy)(enemyPosY enemy)(color red (enemyShape enemy))
+drawBullets :: GameState -> [Picture]
+drawBullets gstate = map drawBullet (bullets gstate)
+
+drawBullet :: Bullet -> Picture
+drawBullet bullet = translate(bulletPosX bullet)(bulletPosY bullet)(color blue (bulletShape bullet))
+
+
+drawEnemies :: GameState -> [Picture]
+drawEnemies gstate = map drawEnemy  (enemies gstate)
+
+drawEnemy :: Enemy -> Picture
+drawEnemy enemy = translate(enemyPosX enemy)(enemyPosY enemy)(color red (enemyShape enemy))

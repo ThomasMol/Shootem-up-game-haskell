@@ -12,9 +12,9 @@ import System.Random
 step :: Float -> GameState -> IO GameState
 step secs gstate =      return $ 
                        -- moveEnemies $
-                        addEnemies gstate
-                        {-moveBullets $
-                        enemyShoot  $
+                        addEnemies $
+                        moveBullets gstate
+                        {-enemyShoot  $
                         checkPlayerHit $
                         checkEnemyHit   $
                         removeDead  $
@@ -31,6 +31,10 @@ input e gstate = return (inputKey e gstate)
 inputKey :: Event -> GameState -> GameState
 inputKey (EventKey (SpecialKey c) Down _ _) (GameState player enemies bullets score ) | c == KeyUp = GameState player {positionY = positionY player + 10} enemies bullets score
                                                                       | c == KeyDown = GameState player {positionY = positionY player - 10} enemies bullets score
+                                                                      | c == KeySpace = GameState player enemies newbullets score
+                                                                      where
+                                                                        newbullets = bullets ++ [Bullet{bulletShape = circle 5,bulletPosX = positionX player + 35, bulletPosY = positionY player,
+                                                                        bulletRight = True, bulletSpeed = 10 }]
 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
@@ -42,13 +46,16 @@ moveEnemies = undefined
 
 addEnemies :: GameState -> GameState
 addEnemies gstate = gstate {enemies = enemies gstate ++ [Enemy {enemyShape = circle 20, enemyPosX = 200, enemyPosY = 0, enemyHealth = 100 , enemySpeed = 10}]
-
-
                             }
 
 moveBullets :: GameState -> GameState
-moveBullets = undefined
+moveBullets gstate = gstate { bullets = map newBullets (bullets gstate) }
 
+newBullets :: Bullet -> Bullet
+newBullets bullet = bullet {bulletPosX = placeholder  }
+                    where
+                        placeholder | bulletRight bullet = bulletPosX bullet + bulletSpeed bullet
+                                    | otherwise = bulletPosX bullet -bulletSpeed bullet
 
 enemyShoot  :: GameState -> GameState
 enemyShoot  = undefined

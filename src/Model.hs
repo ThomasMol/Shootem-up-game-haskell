@@ -16,13 +16,16 @@ data Enemy = Enemy {  enemyShape      :: Shape,
 data Bullet = Bullet { bulletShape    :: Shape,
                       bulletPosX      :: Position,
                       bulletPosY      :: Position,
-                      bulletDirection :: Health,
+                      bulletRight     :: Bool,
                       bulletSpeed     :: Speed
                     }                 
 
 {- data Enemy      = Shape Position Health Speed HitCheck Value
 data Bullet	    = Shape Position Speed Direction Damage HitCheck Sender -}
-data Direction  = Left | Right
+--data Direction  = Left | Right
+
+-- direction Right = 0 , Direction Left = 1
+--type Direction = Int
 
 type Shape      = Picture --change later to bitmap 
 type Health     = Int
