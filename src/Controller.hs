@@ -11,14 +11,15 @@ import System.Random
 -- checkPlayerHit all bullets, checkEnemyHit all bullets ,removeDead, removeBullets that hit, 
 step :: Float -> GameState -> IO GameState
 step secs gstate =      return $ 
-                        moveEnemies $
-                        addEnemies  $
-                        moveBullets $
+                       -- moveEnemies $
+                        addEnemies gstate
+                        {-moveBullets $
                         enemyShoot  $
                         checkPlayerHit $
                         checkEnemyHit   $
                         removeDead  $
                         removeBullets gstate
+                        -}
                         
 
 
