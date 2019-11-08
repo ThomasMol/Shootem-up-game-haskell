@@ -11,7 +11,9 @@ import GHC.Float
 -- move enemies ,add enemies, movebullets , player Input(checkPause, checkPlayerShoot, checkMove), enemyShoot, 
 -- checkPlayerHit all bullets, checkEnemyHit all bullets ,removeDead, removeBullets that hit, 
 step :: Float -> GameState -> IO GameState
-step secs gstate =      return $ 
+step secs gstate |  isPause (pause gstate)  = 
+                
+                        return $ 
                         timeAdd $
                         moveEnemies $
                         addEnemies $
@@ -22,21 +24,20 @@ step secs gstate =      return $
                         removeDead  $
                         removeBullets gstate
                         -}
-                        
-
-
+                        |otherwise =  return $ gstate
 
 
 input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState
-inputKey (EventKey (SpecialKey c) Down _ _) (GameState player enemies bullets time score ) | c == KeyUp = GameState player {positionY = positionY player + 10} enemies bullets time score
-                                                                      | c == KeyDown = GameState player {positionY = positionY player - 10} enemies bullets time score
-                                                                      | c == KeySpace = GameState player enemies newbullets time score
+inputKey (EventKey (SpecialKey c) Down _ _) (GameState player enemies bullets time score pause ) |(pause == False && c == KeyUp) = GameState player {positionY = positionY player + 10} enemies bullets time score pause
+                                                                      | pause == False && c == KeyDown = GameState player {positionY = positionY player - 10} enemies bullets time score pause
+                                                                      | pause == False && c == KeySpace = GameState player enemies newbullets time score pause
+                                                                      | c == KeyDelete = GameState player enemies bullets time score (isPause pause)
                                                                       where
                                                                         newbullets = bullets ++ [Bullet{bulletShape = circle 5,bulletPosX = positionX player + 35, bulletPosY = positionY player,
-                                                                        bulletRight = True, bulletSpeed = 10 }]
+                                                                        bulletRight = True, bulletSpeed = 10, bulletDamage = 15 }]
 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
@@ -95,3 +96,7 @@ removeDead  = undefined
 removeBullets   :: GameState -> GameState
 removeBullets   = undefined
 
+                        
+isPause :: Bool -> Bool
+isPause x   | x = False
+            | otherwise = True
