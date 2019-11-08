@@ -7,30 +7,39 @@ data Player = Player {  shape     :: Shape,
                         health    :: Health
                      }
                      
-data Enemy = Enemy {  shape     :: Shape,
-                      positionX :: Position,
-                      positionY :: Position,
-                      health    :: Health,
-                      speed     :: Speed
-                    }                     
+data Enemy = Enemy {  enemyShape      :: Shape,
+                      enemyPosX       :: Position,
+                      enemyPosY       :: Position,
+                      enemyHealth     :: Health,
+                      enemySpeed      :: Speed
+                    }        
+data Bullet = Bullet { bulletShape    :: Shape,
+                      bulletPosX      :: Position,
+                      bulletPosY      :: Position,
+                      bulletRight     :: Bool,
+                      bulletSpeed     :: Speed
+                    }                 
 
 {- data Enemy      = Shape Position Health Speed HitCheck Value
 data Bullet	    = Shape Position Speed Direction Damage HitCheck Sender -}
-data Direction	= Left | Right
+--data Direction  = Left | Right
 
-type Shape 	    = Picture --change later to bitmap 
-type Health 	  = Int
-type Speed 	    = Float
-type Damage 	  = Int
+-- direction Right = 0 , Direction Left = 1
+--type Direction = Int
+
+type Shape      = Picture --change later to bitmap 
+type Health     = Int
+type Speed      = Float
+type Damage     = Int
 type Position   = Float
 
-data GameState = GameState	{ player 	:: Player,
-                              {-Enemies 	:: [Enemy],
-                              Bullets	:: [Bullet],
-                              Time 		:: Int, -}
-                              score 	:: Int
+data GameState = GameState  { player  :: Player,
+                              enemies :: [Enemy],
+                              bullets :: [Bullet],
+                              time    :: Int, 
+                              score   :: Int
                             }
 
 
 initialState :: GameState
-initialState = GameState (Player {shape = circle 30, positionX = -300, positionY = 0, health = 100}) 0
+initialState = GameState (Player {shape = circle 30, positionX = -300, positionY = 0, health = 100})[] [] 0 0

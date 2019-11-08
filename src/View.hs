@@ -8,5 +8,21 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure (GameState player score) = pictures [scale 0.4 0.4 (translate (-300) 10 (color white (text (show score)))),
-                                              translate (positionX player) (positionY player) (color white (shape player))]
+viewPure (GameState player enemies bullets time score) = pictures help
+                                                where 
+                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show time)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing
+                                                    enemydrawing = drawEnemies (GameState player enemies bullets time score)
+                                                    bulletdrawing = drawBullets (GameState player enemies bullets time score)
+
+drawBullets :: GameState -> [Picture]
+drawBullets gstate = map drawBullet (bullets gstate)
+
+drawBullet :: Bullet -> Picture
+drawBullet bullet = translate(bulletPosX bullet)(bulletPosY bullet)(color blue (bulletShape bullet))
+
+
+drawEnemies :: GameState -> [Picture]
+drawEnemies gstate = map drawEnemy  (enemies gstate)
+
+drawEnemy :: Enemy -> Picture
+drawEnemy enemy = translate(enemyPosX enemy)(enemyPosY enemy)(color red (enemyShape enemy))
