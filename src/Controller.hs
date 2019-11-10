@@ -178,9 +178,19 @@ drawEnemybullet gstate (n:mi) | ((time gstate) `mod` 15 == 0) = (bullets gstate)
                                              | otherwise = bullets gstate
 
 
+ -------------------------------------------------------------------ANIMATION----------------------------------------------------------------
 
 
---------------------------------------------------------------------------------------------------------OTHER ----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------OTHER ----------------------------------------------------------------------------
 
 removeDead  :: GameState -> GameState -- remove dead enemies & update player score
 removeDead gstate = gstate { enemies = test, score = (score gstate + test2) }
@@ -210,4 +220,5 @@ remo2 bullets = filter (\x -> isPause(bulletHit x)) bullets
 isPause :: Bool -> Bool
 isPause x   | x = False
             | otherwise = True
+
 

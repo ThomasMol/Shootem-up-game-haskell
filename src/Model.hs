@@ -21,7 +21,6 @@ data Bullet = Bullet { bulletShape    :: Shape,
                       bulletSpeed     :: Speed,
                       bulletDamage    :: Damage,
                       bulletHit       :: Bool
-
                     }                 
 
 {- data Enemy      = Shape Position Health Speed HitCheck Value
