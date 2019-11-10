@@ -18,13 +18,10 @@ data Bullet = Bullet { bulletShape    :: Shape,
                       bulletPosX      :: Position,
                       bulletPosY      :: Position,
                       bulletRight     :: Bool,
-<<<<<<< Updated upstream
-                      bulletSpeed     :: Speed
-=======
                       bulletSpeed     :: Speed,
                       bulletDamage    :: Damage,
                       bulletHit       :: Bool
->>>>>>> Stashed changes
+
                     }                 
 
 {- data Enemy      = Shape Position Health Speed HitCheck Value
@@ -44,21 +41,14 @@ data GameState = GameState  { player  :: Player,
                               enemies :: [Enemy],
                               bullets :: [Bullet],
                               time    :: Int, 
-<<<<<<< Updated upstream
                               score   :: Int
-=======
-                              score   :: Int,
                               pause   :: Bool
 
->>>>>>> Stashed changes
                             }
 
 data Keys
 
 
 initialState :: GameState
-<<<<<<< Updated upstream
-initialState = GameState (Player {shape = circle 30, positionX = -300, positionY = 0, health = 100})[] [] 0 0
-=======
 initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 False
->>>>>>> Stashed changes
+
