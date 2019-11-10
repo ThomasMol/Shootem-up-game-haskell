@@ -22,7 +22,7 @@ step secs gstate |pause gstate  = return $ gstate
                         addEnemies $
                         moveBullets $
                         checkAllEnemies $
-                        enemyShoot $
+                        --enemyShoot $ Crasht snel
                         checkPlayerHit $
 
                         removeDead 
