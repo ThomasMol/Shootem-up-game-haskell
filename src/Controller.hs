@@ -17,13 +17,14 @@ step secs gstate |pause gstate  = return $ gstate
                                         
                         return $ 
                         timeAdd $
-                        removeBullets $
                         moveEnemies $
+                        removeBullets $
                         addEnemies $
                         moveBullets $
                         checkAllEnemies $
                         enemyShoot $
                         checkPlayerHit $
+
                         removeDead 
                           gstate
                         {-enemyShoot  $
@@ -98,7 +99,7 @@ playerHP (b:lt) player      | (bulletPlayerHit player b) = playerHP lt newPlayer
 bulletPlayerHit :: Player -> Bullet -> Bool
 bulletPlayerHit player bullet = (distance <(30 +4) && fromEnemy) 
                         where
-                            fromEnemy = isPause (bulletRight bullet)
+                            fromEnemy = not (bulletRight bullet)
                             dx = (bulletPosX bullet) - (positionX player)
                             dy = (bulletPosY bullet) - (positionY player)
                             distance = sqrt(dx*dx + dy*dy)
@@ -214,7 +215,7 @@ removeBullets gstate = gstate { bullets = test2 }
                         test2 = remo2 (bullets gstate) -- remove every bullet where bulletHit = True
 
 remo2 :: [Bullet] -> [Bullet]
-remo2 bullets = filter (\x -> isPause(bulletHit x)) bullets
+remo2 bullets = filter (\x -> not(bulletHit x)) bullets
                        
 -- turn True into false and vice versa
 isPause :: Bool -> Bool
