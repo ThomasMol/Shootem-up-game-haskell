@@ -32,7 +32,7 @@ viewPure (GameState player enemies bullets time score animations Paused) = pictu
 --Game is playing
 viewPure (GameState player enemies bullets time score animations Playing) = pictures help
                                                 where 
-                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing ++ [playerdrawing] ++ deadAnimation
+                                                    help = [scale 0.4 0.4 (translate (600) 600 (color white (text (show score)))),scale 0.4 0.4(translate (-1000) 600 (color red (text (show (health player))))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing ++ [playerdrawing] ++ deadAnimation
                                                     enemydrawing = drawEnemies (GameState player enemies bullets time score animations Playing)
                                                     bulletdrawing = drawBullets (GameState player enemies bullets time score animations Playing)
                                                     playerdrawing = drawPlayer(player )

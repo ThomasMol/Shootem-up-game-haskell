@@ -4,7 +4,7 @@ import Graphics.Gloss
 data Player = Player {  shape     :: Shape,
                         positionX :: Position,
                         positionY :: Position,
-                        health    :: Health
+                        health    :: Int
                      }
                      
 data Enemy = Enemy {  enemyShape      :: Shape,
@@ -51,7 +51,7 @@ data GameState = GameState  { player  :: Player,
 
 
 initialState :: GameState
-initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 [] Dead {saved = False}
+initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 [] Menu { menuItem = 0}
 newGameState :: GameState
 newGameState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 [] Playing
 
