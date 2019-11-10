@@ -11,13 +11,16 @@ data Enemy = Enemy {  enemyShape      :: Shape,
                       enemyPosX       :: Position,
                       enemyPosY       :: Position,
                       enemyHealth     :: Health,
-                      enemySpeed      :: Speed
+                      enemySpeed      :: Speed,
+                      enemyValue      :: Int
                     }        
 data Bullet = Bullet { bulletShape    :: Shape,
                       bulletPosX      :: Position,
                       bulletPosY      :: Position,
                       bulletRight     :: Bool,
-                      bulletSpeed     :: Speed
+                      bulletSpeed     :: Speed,
+                      bulletDamage    :: Damage,
+                      bulletHit       :: Bool
                     }                 
 
 {- data Enemy      = Shape Position Health Speed HitCheck Value
@@ -37,9 +40,13 @@ data GameState = GameState  { player  :: Player,
                               enemies :: [Enemy],
                               bullets :: [Bullet],
                               time    :: Int, 
-                              score   :: Int
+                              score   :: Int,
+                              pause   :: Bool
+
                             }
 
 
+
 initialState :: GameState
-initialState = GameState (Player {shape = circle 30, positionX = -300, positionY = 0, health = 100})[] [] 0 0
+initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 False
+
