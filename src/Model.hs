@@ -44,14 +44,16 @@ data GameState = GameState  { player  :: Player,
                               bullets :: [Bullet],
                               time    :: Int, 
                               score   :: Int,
+                              animations :: [Enemy],
                               status  :: Status
                             }
 
 
 
 initialState :: GameState
-initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 Dead {saved = False}
+initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 [] Dead {saved = False}
 newGameState :: GameState
-newGameState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 Playing
+newGameState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 [] Playing
+
 
 

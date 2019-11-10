@@ -11,30 +11,33 @@ import GHC.Float
 
 
 view :: GameState -> IO Picture
-view gstate@(GameState player enemies bullets time score Highscores) = do
+view gstate@(GameState player enemies bullets time score animations Highscores) = do
                                                                         contents <- (readFile "highscores.txt") `catch` readHandler
                                                                         return (pictures (drawHighscores (lines contents)))
-view gstate@(GameState player enemies bullets time score Dead {saved = x}) = return (pictures drawDead)                                                                                   
-view gstate@(GameState player enemies bullets time score status) = return (viewPure gstate)
+view gstate@(GameState player enemies bullets time score animations Dead {saved = x}) = return (pictures drawDead)                                                                                   
+view gstate@(GameState player enemies bullets time score animations status) = return (viewPure gstate)
 
 readHandler:: IOError -> IO String
 readHandler e = return "Could not find any highscores..."
 
 viewPure :: GameState -> Picture
 --Game in Menu
-viewPure (GameState player enemies bullets time score Menu {menuItem = x}) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "New Game"))),
+viewPure (GameState player enemies bullets time score animations Menu {menuItem = x}) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "New Game"))),
                                                                                         scale 0.2 0.2 (translate (-1000) 150 (color white (text "Highscores"))),
                                                                                         scale 0.2 0.2 (translate (-1000) 0 (color white (text "Quit"))),
                                                                                         drawMenuIndicators x]
 --Game is paused
-viewPure (GameState player enemies bullets time score Paused) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "Game is paused, press p again to unpause"))),
+viewPure (GameState player enemies bullets time score animations Paused) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "Game is paused, press p again to unpause"))),
                                                                             translate (positionX player) (positionY player) (color white (shape player))]
 --Game is playing
-viewPure (GameState player enemies bullets time score Playing) = pictures help
+viewPure (GameState player enemies bullets time score animations Playing) = pictures help
                                                 where 
-                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing
-                                                    enemydrawing = drawEnemies (GameState player enemies bullets time score Playing)
-                                                    bulletdrawing = drawBullets (GameState player enemies bullets time score Playing)
+                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing ++ [playerdrawing] ++ deadAnimation
+                                                    enemydrawing = drawEnemies (GameState player enemies bullets time score animations Playing)
+                                                    bulletdrawing = drawBullets (GameState player enemies bullets time score animations Playing)
+                                                    playerdrawing = drawPlayer(player )
+                                                    deadAnimation = drawAnimation (GameState player enemies bullets time score animations Playing)
+
 
 drawMenuIndicators :: Float -> Picture
 drawMenuIndicators x = scale 0.2 0.2 (translate (-1200) ((x*(-150)) + 300) (color white (text ">" )))
@@ -61,3 +64,20 @@ drawEnemies gstate = map drawEnemy  (enemies gstate)
 
 drawEnemy :: Enemy -> Picture
 drawEnemy enemy = translate(enemyPosX enemy)(enemyPosY enemy)(color red (ThickCircle 10 20 ))
+
+
+drawAnimation :: GameState -> [Picture]
+drawAnimation gstate = map drawDeadEnemy (animations gstate)
+
+drawDeadEnemy :: Enemy -> Picture
+drawDeadEnemy enemy |enemyValue enemy == (-3) = translate(enemyPosX enemy)(enemyPosY enemy)(color yellow (ThickCircle 10 1 )) 
+                    |enemyValue enemy == (-2) = translate(enemyPosX enemy)(enemyPosY enemy)(color yellow (ThickCircle 10 4 ))
+                    | enemyValue enemy == (-1) = translate(enemyPosX enemy)(enemyPosY enemy)(color yellow (ThickCircle 10 8 ))
+                    | otherwise  = translate(enemyPosX enemy)(enemyPosY enemy)(color yellow (ThickCircle 10 20 ))
+
+
+deadEnemies :: [Enemy] -> [Enemy] -- ANIMATION FOR DEAD ENEMIES still needs to be implemented
+deadEnemies enemies = filter (\x -> (enemyHealth x) <0) enemies
+
+drawPlayer :: Player -> Picture
+drawPlayer player = translate (positionX player)(positionY player) (color blue (ThickCircle 15 30))
