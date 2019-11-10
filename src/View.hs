@@ -10,15 +10,10 @@ view = return . viewPure
 viewPure :: GameState -> Picture
 viewPure (GameState player enemies bullets time score) = pictures help
                                                 where 
-<<<<<<< Updated upstream
-                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show time)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing
-                                                    enemydrawing = drawEnemies (GameState player enemies bullets time score)
-                                                    bulletdrawing = drawBullets (GameState player enemies bullets time score)
-=======
                                                     help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))]  ++ enemydrawing ++ bulletdrawing
                                                     enemydrawing = drawEnemies (GameState player enemies bullets time score pause)
                                                     bulletdrawing = drawBullets (GameState player enemies bullets time score pause)
->>>>>>> Stashed changes
+
 
 drawBullets :: GameState -> [Picture]
 drawBullets gstate = map drawBullet (bullets gstate)
