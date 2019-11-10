@@ -7,17 +7,23 @@ import Graphics.Gloss.Interface.IO.Game
 import System.Random
 import GHC.Float
 import System.Exit
+import System.IO
+import System.Directory
+import Control.Monad
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
+
 step secs gstate@(GameState player enemies bullets time score animations Menu {menuItem = x}) =  return $ gstate
-step secs gstate@(GameState player enemies bullets time score animations Highscores) =  return $ gstate
+step secs gstate@(GameState player enemies bullets time score animations Highscores) =  return $ timeAdd $ gstate
 step secs gstate@(GameState player enemies bullets time score animations Paused) =  return $ gstate    
+step secs gstate@(GameState player enemies bullets time score animations Dead {saved = x}) =  return $ gstate  
+
 step secs gstate@(GameState player enemies bullets time score animations Quit) =  exitSuccess
 
 step secs gstate@(GameState player enemies bullets time score animations Playing) =                 
-                        
-                        addEnemies $
+                        addEnemies $ 
+
                         timeAdd $
                         moveEnemies $
                         enemyOOB $
@@ -36,7 +42,19 @@ step secs gstate@(GameState player enemies bullets time score animations Playing
 
 
 input :: Event -> GameState -> IO GameState
-input e gstate = return (inputKey e gstate)
+input e gstate@(GameState player enemies bullets time score animations Dead {saved = x}) | not x = do
+                                                                                    let fileName = "highscores.txt"
+                                                                                    fileExists <- doesFileExist fileName
+                                                                                    if not fileExists
+                                                                                        then do writeFile fileName ((show score)++"\n")
+                                                                                        else do file <- readFile fileName
+                                                                                                let newContent = (show score)++"\n" ++ file
+                                                                                                when (length newContent > 0) $
+                                                                                                    writeFile fileName newContent 
+                                                                                    return (inputKey e (GameState player enemies bullets time score animations Dead {saved = True}))
+                                                                               | otherwise = return (inputKey e gstate)                     
+input e gstate@(GameState player enemies bullets time score animations status) =  return (inputKey e gstate)
+
 
 inputKey :: Event -> GameState -> GameState
 
@@ -56,16 +74,18 @@ inputKey (EventKey (SpecialKey KeyUp) Down _ _) (GameState player enemies bullet
 inputKey (EventKey (SpecialKey KeyDown) Down _ _) (GameState player enemies bullets time score animations Menu {menuItem = x}) | x <= 1 =  GameState player enemies bullets time score animations Menu {menuItem = x + 1}
                                                                                                                     | otherwise =  GameState player enemies bullets time score animations Menu {menuItem = x }
 
-inputKey (EventKey (SpecialKey KeySpace) Down _ _) (GameState player enemies bullets time score animations Menu {menuItem = x}) | x == 0 = GameState player enemies bullets time score animations Playing
-                                                                                                                     | x == 1 = GameState player enemies bullets time score animations Highscores
-                                                                                                                     | x == 2 = GameState player enemies bullets time score animations Quit
-                                                                                                                     | otherwise = GameState player enemies bullets time score animations Menu {menuItem = x}
+inputKey (EventKey (SpecialKey KeySpace) Down _ _) (GameState player enemies bullets time score animations Menu {menuItem = x}) | x == 0 = newGameState
+                                                                                                                     | x == 1 = GameState player enemies bullets 0 score animations Highscores
+                                                                                                                     | x == 2 = GameState player enemies bullets 0 score animations Quit
+                                                                                                                     | otherwise = GameState player enemies bullets 0 score animations Menu {menuItem = x}
+--Dead screen input
+inputKey (EventKey (SpecialKey KeySpace) Down _ _) (GameState player enemies bullets time score animations Dead{saved = x}) = GameState player enemies bullets 0 score animations Menu {menuItem = 0}
+
+
 --Highscore screen input
-inputKey (EventKey (SpecialKey KeySpace) Down _ _) (GameState player enemies bullets time score animations Highscores) = GameState player enemies bullets time score animations Menu {menuItem = 0}
-                                                                     
-
+inputKey (EventKey (SpecialKey KeySpace) Down _ _) (GameState player enemies bullets time score animations Highscores) = GameState player enemies bullets 0 score animations Menu {menuItem = 0}
+                                                                  
 inputKey _ gstate = gstate -- Otherwise keep the same
-
 
 timeAdd :: GameState -> GameState
 timeAdd gstate = gstate { time = (time gstate)+1}
@@ -80,14 +100,7 @@ newBullets bullet = bullet {bulletPosX = placeholder  }
                                     | otherwise = bulletPosX bullet -bulletSpeed bullet 
 
 
-
-
-
-
 -------------------------------------------------------------------------Player CODE --------------------------------------------------------------------------------------
-
-
-
 checkPlayerHit  :: GameState -> GameState
 checkPlayerHit gstate = gstate { player = hitcheck1, bullets = hitcheck2}
                         where 
@@ -152,22 +165,18 @@ newEnemyPos :: Enemy -> Enemy
 newEnemyPos enemy = enemy { enemyPosX = enemyPosX enemy - enemySpeed enemy }
 
 
-addEnemies :: GameState -> IO GameState -- RANDOM SPAWN MOET NOG GEIMPLEMENTEERD WORDEN
-addEnemies gstate   | oi == 0 = return( addEnemies2 gstate)
-                    | otherwise =  return (gstate)
+addEnemies :: GameState -> IO GameState
+addEnemies gstate   | spawnChecker == 0 = addEnemies' gstate
+                    | otherwise = return gstate
                     where 
-                        test = (time gstate)
-                        oi = test `mod` 15
+                        timeNow = (time gstate)
+                        spawnChecker = timeNow `mod` 15
 
+addEnemies' :: GameState -> IO GameState
+addEnemies' gstate = do
+                    randomnum <- randomRIO((-200),200 :: Float) --generate random float for enemy y position
+                    return (gstate {enemies = enemies gstate ++ [Enemy {enemyShape = circle 20, enemyPosX = 300, enemyPosY = randomnum, enemyHealth = 100 , enemySpeed = 5, enemyValue = 10}]})
 
-addEnemies2 :: GameState -> GameState
-addEnemies2 gstate = gstate {enemies = enemies gstate ++ [Enemy {enemyShape = circle 20, enemyPosX = 400, enemyPosY = random, enemyHealth = 100 , enemySpeed = 5, enemyValue = 10}]
-                            }
-                    where
-                        --random = genRange(-600,600)
-
-                        random = int2Float ((((time gstate)+1) `mod` 30 ) * 10)
-                        --random = randomRIO (-600,600)
 
 
 checkAllEnemies :: GameState -> GameState

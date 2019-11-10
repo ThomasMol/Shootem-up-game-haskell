@@ -3,20 +3,24 @@ module View where
 import Graphics.Gloss
 import Control.Exception
 import System.IO
-
 import Model
+import System.Directory
+import Control.Monad
+import GHC.Float
+
+
 
 view :: GameState -> IO Picture
-view gstate@(GameState player enemies bullets time score animations status) | status == Highscores = do
-                                                                                        contents <- (readFile "highscores.txt") `catch` readHandler
-                                                                                        return (pictures (drawHighscores (lines contents)))                                                                                         
-                                                                 | otherwise =  return (viewPure gstate)
+view gstate@(GameState player enemies bullets time score animations Highscores) = do
+                                                                        contents <- (readFile "highscores.txt") `catch` readHandler
+                                                                        return (pictures (drawHighscores (lines contents)))
+view gstate@(GameState player enemies bullets time score animations Dead {saved = x}) = return (pictures drawDead)                                                                                   
+view gstate@(GameState player enemies bullets time score animations status) = return (viewPure gstate)
+
 readHandler:: IOError -> IO String
 readHandler e = return "Could not find any highscores..."
 
 viewPure :: GameState -> Picture
-
-
 --Game in Menu
 viewPure (GameState player enemies bullets time score animations Menu {menuItem = x}) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "New Game"))),
                                                                                         scale 0.2 0.2 (translate (-1000) 150 (color white (text "Highscores"))),
@@ -34,12 +38,19 @@ viewPure (GameState player enemies bullets time score animations Playing) = pict
                                                     playerdrawing = drawPlayer(player )
                                                     deadAnimation = drawAnimation (GameState player enemies bullets time score animations Playing)
 
+
 drawMenuIndicators :: Float -> Picture
 drawMenuIndicators x = scale 0.2 0.2 (translate (-1200) ((x*(-150)) + 300) (color white (text ">" )))
 
 drawHighscores :: [String] -> [Picture]
-drawHighscores xs = [scale 0.2 0.2 (translate (-1000) 300 (color white (text "Press space to go back."))),scale 0.2 0.2 (translate (-1000) 150 (color blue (text "Highscores:")))] ++ map f xs
-        where f x = scale 0.2 0.2 (translate (-1000) 0 (color white (text x)))                                   
+drawHighscores xs = [scale 0.2 0.2 (translate (-1000) 300 (color white (text "Press space to go back."))),scale 0.2 0.2 (translate (-1000) 150 (color blue (text "Highscores:")))] ++ listedScores                   
+                    where scores = [(color white (text x)) |x <- xs] 
+                          ypositions = [int2Float(y*(-150)) + 150  | y <- [1..(length xs)]]   
+                          listedScores = zipWith (\x y -> scale 0.2 0.2 (translate (-1000) y x)) scores ypositions
+                   
+
+drawDead :: [Picture]
+drawDead = [scale 0.2 0.2 (translate (-1000) 300 (color white (text "Press space to go to the menu."))),scale 0.2 0.2 (translate (-1000) 150 (color red (text "YOU'RE DEAD")))]
 
 
 drawBullets :: GameState -> [Picture]
