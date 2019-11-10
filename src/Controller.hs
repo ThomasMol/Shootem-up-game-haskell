@@ -131,7 +131,7 @@ playerHP [] (n:mi) player   | (enemyPlayerHit player n) = playerHP [] mi newPlay
 playerHP (b:lt) [] player   | (bulletPlayerHit player b) = playerHP lt [] newPlayer
                             | otherwise = playerHP lt [] player
                             where
-                                newPlayer = player{ health = (health player) - (bulletDamage b) - 30}
+                                newPlayer = player{ health = (health player) - (bulletDamage b)}
 
 playerHP (b:lt) (n:mi) player   | (bulletPlayerHit player b) && (enemyPlayerHit player n)  = playerHP lt mi newPlayer 
                                 | (bulletPlayerHit player b) = playerHP lt mi newPlayer2
