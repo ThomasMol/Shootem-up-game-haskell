@@ -61,9 +61,9 @@ inputKey :: Event -> GameState -> GameState
 
 --Game playing or paused input
 inputKey (EventKey (SpecialKey KeyUp) Down _ _) (GameState player enemies bullets time score animations  Playing)   | (positionY player > 200) = GameState player {positionY = positionY player} enemies bullets time score animations Playing
-                                                                                                                    | otherwise =  GameState player {positionY = positionY player + 10} enemies bullets time score animations Playing
+                                                                                                                    | otherwise =  GameState player {positionY = positionY player + 20} enemies bullets time score animations Playing
 inputKey (EventKey (SpecialKey KeyDown) Down _ _) (GameState player enemies bullets time score animations Playing)  | (positionY player) < (-250) = GameState player {positionY = positionY player} enemies bullets time score animations Playing
-                                                                                                                    | otherwise =  GameState player {positionY = positionY player - 10} enemies bullets time score animations Playing
+                                                                                                                    | otherwise =  GameState player {positionY = positionY player - 20} enemies bullets time score animations Playing
 inputKey (EventKey (SpecialKey KeySpace) Down _ _) (GameState player enemies bullets time score animations Playing) = GameState player enemies newbullets time score animations Playing
                                                                                         where
                                                                                             newbullets = bullets ++ [Bullet{bulletShape = circle 4,bulletPosX = positionX player + 35, bulletPosY = positionY player,

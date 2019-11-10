@@ -33,7 +33,7 @@ data Bullet	    = Shape Position Speed Direction Damage HitCheck Sender -}
 -- direction Right = 0 , Direction Left = 1
 --type Direction = Int
 
-type Shape      = Picture --change later to bitmap 
+type Shape      = Picture  
 type Health     = Int
 type Speed      = Float
 type Damage     = Int
