@@ -4,7 +4,7 @@ import Graphics.Gloss
 data Player = Player {  shape     :: Shape,
                         positionX :: Position,
                         positionY :: Position,
-                        health    :: Int
+                        health    :: Health
                      }
                      
 data Enemy = Enemy {  enemyShape      :: Shape,
