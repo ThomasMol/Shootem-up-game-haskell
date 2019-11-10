@@ -51,14 +51,11 @@ inputKey (EventKey (SpecialKey c) Down _ _) (GameState player enemies bullets ti
                                                                       | c == KeyDown = GameState player {positionY = positionY player - 10} enemies bullets time score
                                                                       | c == KeySpace = GameState player enemies newbullets time score
                                                                       where
-<<<<<<< Updated upstream
-                                                                        newbullets = bullets ++ [Bullet{bulletShape = circle 5,bulletPosX = positionX player + 35, bulletPosY = positionY player,
-                                                                        bulletRight = True, bulletSpeed = 10 }]
-=======
+
                                                                         newbullets = bullets ++ [Bullet{bulletShape = circle 4,bulletPosX = positionX player + 35, bulletPosY = positionY player,
                                                                         bulletRight = True, bulletSpeed = 30, bulletDamage = 15, bulletHit = False }]
                                                                         
->>>>>>> Stashed changes
+
 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
