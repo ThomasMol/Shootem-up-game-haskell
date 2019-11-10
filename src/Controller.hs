@@ -11,14 +11,11 @@ import GHC.Float
 -- move enemies ,add enemies, movebullets , player Input(checkPause, checkPlayerShoot, checkMove), enemyShoot, 
 -- checkPlayerHit all bullets, checkEnemyHit all bullets ,removeDead, removeBullets that hit, 
 step :: Float -> GameState -> IO GameState
-<<<<<<< Updated upstream
-step secs gstate =      return $ 
-=======
+
 step secs gstate |pause gstate  = return $ gstate
                  |otherwise =  
                                         
                         return $ 
->>>>>>> Stashed changes
                         timeAdd $
                         removeBullets $
                         moveEnemies $
@@ -35,21 +32,15 @@ step secs gstate |pause gstate  = return $ gstate
                         checkEnemyHit   $
                          gstate
                         -}
-<<<<<<< Updated upstream
-                        
-
-
-=======
->>>>>>> Stashed changes
 
 
 input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState
-inputKey (EventKey (SpecialKey c) Down _ _) (GameState player enemies bullets time score ) | c == KeyUp = GameState player {positionY = positionY player + 10} enemies bullets time score
-                                                                      | c == KeyDown = GameState player {positionY = positionY player - 10} enemies bullets time score
-                                                                      | c == KeySpace = GameState player enemies newbullets time score
+inputKey (EventKey (SpecialKey c) Down _ _) (GameState player enemies bullets time score pause ) | c == KeyUp = GameState player {positionY = positionY player + 10} enemies bullets time score pause
+                                                                      | c == KeyDown = GameState player {positionY = positionY player - 10} enemies bullets time score pause
+                                                                      | c == KeySpace = GameState player enemies newbullets time score pause
                                                                       where
 
                                                                         newbullets = bullets ++ [Bullet{bulletShape = circle 4,bulletPosX = positionX player + 35, bulletPosY = positionY player,
@@ -214,12 +205,9 @@ removeBullets gstate = gstate { bullets = test2 }
 
 remo2 :: [Bullet] -> [Bullet]
 remo2 bullets = filter (\x -> isPause(bulletHit x)) bullets
-
-<<<<<<< Updated upstream
-=======
                        
 -- turn True into false and vice versa
 isPause :: Bool -> Bool
 isPause x   | x = False
             | otherwise = True
->>>>>>> Stashed changes
+

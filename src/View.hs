@@ -8,7 +8,7 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure (GameState player enemies bullets time score) = pictures help
+viewPure (GameState player enemies bullets time score pause) = pictures help
                                                 where 
                                                     help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show score)))),translate (positionX player) (positionY player) (color white (shape player))]  ++ enemydrawing ++ bulletdrawing
                                                     enemydrawing = drawEnemies (GameState player enemies bullets time score pause)

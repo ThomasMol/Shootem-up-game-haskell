@@ -41,12 +41,11 @@ data GameState = GameState  { player  :: Player,
                               enemies :: [Enemy],
                               bullets :: [Bullet],
                               time    :: Int, 
-                              score   :: Int
+                              score   :: Int,
                               pause   :: Bool
 
                             }
 
-data Keys
 
 
 initialState :: GameState
