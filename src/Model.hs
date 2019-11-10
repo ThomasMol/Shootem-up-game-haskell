@@ -23,7 +23,7 @@ data Bullet = Bullet { bulletShape    :: Shape,
                       bulletHit       :: Bool
                     }                 
 
-data Status = Playing | Paused | Dead | Menu {menuItem :: Float}| Highscores | Quit deriving (Eq)
+data Status = Playing | Paused | Dead {saved :: Bool}| Menu {menuItem :: Float}| Highscores | Quit deriving (Eq)
 
 
 {- data Enemy      = Shape Position Health Speed HitCheck Value
@@ -45,12 +45,13 @@ data GameState = GameState  { player  :: Player,
                               time    :: Int, 
                               score   :: Int,
                               status  :: Status
-
                             }
 
 
 
 initialState :: GameState
-initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 Menu {menuItem = 0}
+initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 Dead {saved = False}
+newGameState :: GameState
+newGameState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 Playing
 
 
