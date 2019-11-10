@@ -44,13 +44,13 @@ data GameState = GameState  { player  :: Player,
                               bullets :: [Bullet],
                               time    :: Int, 
                               score   :: Int,
+                              animations :: [Enemy],
                               status  :: Status
-
                             }
 
 
 
 initialState :: GameState
-initialState = GameState (Player {shape = (color blue (ThickCircle 15 30)), positionX = -300, positionY = 0, health = 100})[] [] 0 0 Menu {menuItem = 0}
+initialState = GameState (Player {shape = circle 1, positionX = -300, positionY = 0, health = 100})[] [] 0 0 [] Menu {menuItem = 0}
 
 
