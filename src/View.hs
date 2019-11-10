@@ -15,13 +15,6 @@ readHandler:: IOError -> IO String
 readHandler e = return "Could not find any highscores..."
 
 viewPure :: GameState -> Picture
-<<<<<<< Updated upstream
-viewPure (GameState player enemies bullets time score) = pictures help
-                                                where 
-                                                    help = [scale 0.4 0.4 (translate (800) 600 (color white (text (show time)))),translate (positionX player) (positionY player) (color white (shape player))] ++ enemydrawing ++ bulletdrawing
-                                                    enemydrawing = drawEnemies (GameState player enemies bullets time score)
-                                                    bulletdrawing = drawBullets (GameState player enemies bullets time score)
-=======
 
 --Game in Menu
 viewPure (GameState player enemies bullets time score Menu {menuItem = x}) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "New Game"))),
@@ -45,7 +38,6 @@ drawHighscores :: [String] -> [Picture]
 drawHighscores xs = [scale 0.2 0.2 (translate (-1000) 300 (color white (text "Press space to go back."))),scale 0.2 0.2 (translate (-1000) 150 (color blue (text "Highscores:")))] ++ map f xs
         where f x = scale 0.2 0.2 (translate (-1000) 0 (color white (text x)))                                   
 
->>>>>>> Stashed changes
 
 drawBullets :: GameState -> [Picture]
 drawBullets gstate = map drawBullet (bullets gstate)

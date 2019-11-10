@@ -17,7 +17,8 @@ data Bullet = Bullet { bulletShape    :: Shape,
                       bulletPosX      :: Position,
                       bulletPosY      :: Position,
                       bulletRight     :: Bool,
-                      bulletSpeed     :: Speed
+                      bulletSpeed     :: Speed,
+                      bulletDamage    :: Damage
                     }                 
 
 data Status = Playing | Paused | Dead | Menu {menuItem :: Float}| Highscores | Quit deriving (Eq)
@@ -40,18 +41,10 @@ data GameState = GameState  { player  :: Player,
                               enemies :: [Enemy],
                               bullets :: [Bullet],
                               time    :: Int, 
-<<<<<<< Updated upstream
-                              score   :: Int
-=======
                               score   :: Int,
                               status  :: Status
->>>>>>> Stashed changes
                             }
 
 
 initialState :: GameState
-<<<<<<< Updated upstream
-initialState = GameState (Player {shape = circle 30, positionX = -300, positionY = 0, health = 100})[] [] 0 0
-=======
 initialState = GameState (Player {shape = circle 30, positionX = -300, positionY = 0, health = 100})[] [] 0 0 Menu {menuItem = 0}
->>>>>>> Stashed changes
