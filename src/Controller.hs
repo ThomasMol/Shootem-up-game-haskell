@@ -33,6 +33,7 @@ step secs gstate@(GameState player enemies bullets time score animations Playing
                         checkAllEnemies $
                         enemyShoot $ 
                         checkPlayerHit $
+                        checkPlayerDead $
                         removeDead 
                           gstate
 
@@ -101,6 +102,11 @@ newBullets bullet = bullet {bulletPosX = placeholder  }
 
 
 -------------------------------------------------------------------------Player CODE --------------------------------------------------------------------------------------
+checkPlayerDead :: GameState -> GameState
+checkPlayerDead gstate  | health (player gstate) <=0 = gstate {status = Dead {saved = False}}
+                        | otherwise = gstate
+
+
 checkPlayerHit  :: GameState -> GameState
 checkPlayerHit gstate = gstate { player = hitcheck1, bullets = hitcheck2}
                         where 
