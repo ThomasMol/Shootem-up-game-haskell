@@ -12,4 +12,4 @@ main = playIO (InWindow "Shoot’em Up" (800, 600) (0, 0)) -- Or FullScreen
               initialState     -- Initial state
               view             -- View function
               input            -- Event function
-              step             -- Step functionmai
+              step             -- Step function

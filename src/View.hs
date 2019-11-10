@@ -16,6 +16,7 @@ readHandler e = return "Could not find any highscores..."
 
 viewPure :: GameState -> Picture
 
+
 --Game in Menu
 viewPure (GameState player enemies bullets time score Menu {menuItem = x}) = pictures [scale 0.2 0.2 (translate (-1000) 300 (color white (text "New Game"))),
                                                                                         scale 0.2 0.2 (translate (-1000) 150 (color white (text "Highscores"))),
@@ -43,10 +44,10 @@ drawBullets :: GameState -> [Picture]
 drawBullets gstate = map drawBullet (bullets gstate)
 
 drawBullet :: Bullet -> Picture
-drawBullet bullet = translate(bulletPosX bullet)(bulletPosY bullet)(color blue (bulletShape bullet))
+drawBullet bullet = translate(bulletPosX bullet)(bulletPosY bullet)(color white (ThickCircle 2 4))
 
 drawEnemies :: GameState -> [Picture]
 drawEnemies gstate = map drawEnemy  (enemies gstate)
 
 drawEnemy :: Enemy -> Picture
-drawEnemy enemy = translate(enemyPosX enemy)(enemyPosY enemy)(color red (enemyShape enemy))
+drawEnemy enemy = translate(enemyPosX enemy)(enemyPosY enemy)(color red (ThickCircle 10 20 ))
